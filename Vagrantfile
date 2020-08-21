@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"
+        master.vm.network "public_network", bridge: "eno1"
         master.vm.hostname = "k8s-master"
         master.vm.provision "ansible" do |ansible|
             ansible.playbook = "kubernetes-setup/master-playbook.yml"
@@ -34,3 +35,4 @@ Vagrant.configure("2") do |config|
             end
         end
     end
+end

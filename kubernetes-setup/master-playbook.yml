@@ -99,7 +99,7 @@
 # 2.3a: initialize kubernetes cluster
 
   - name: Initialize the Kubernetes cluster using kubeadm
-    command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10, 110.38.24.76, k8s.ashersyed.dev, k8s.ashersyed.xyz, k8s.ashersyed.com"  --node-name k8s-master --pod-network-cidr=10.0.0.0/8
+    command: kubeadm init --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=10.0.0.0/8
 
 # 2.4: setup the kube config file for the vagrant user to access the Kubernetes cluster
 
@@ -124,6 +124,7 @@
 
   - name: Copy join command to local file
     local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+    become: false
 
 # 2.7: Setup a handler for checking Docker daemon
 
