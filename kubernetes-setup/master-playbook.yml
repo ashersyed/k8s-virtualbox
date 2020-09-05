@@ -24,7 +24,7 @@
 
   - name: Add apt repository for stable version
     apt_repository:
-      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
       state: present
 
   - name: Install docker and its dependecies
@@ -112,10 +112,22 @@
 
 # 2.5: setup the container networking provider and the network policy engine
 
-  - name: Install calico pod network
+  - name: Install pod network operator
     become: false
-    # command: kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml
-    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    command: kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml
+    # command: kubectl create -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+  # - name: Install tigera operator
+  #   become: false
+  #   command: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
+
+  # - name: Install calico custom resource definition
+  #   become: false
+  #   command: kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+
+  # - name: Remove the taints on the master so that you can schedule pods on it
+  #   become: false
+  #   command: kubectl taint nodes --all node-role.kubernetes.io/master-    
 
 # 2.6: Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named join-command
 
