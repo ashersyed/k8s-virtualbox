@@ -11,13 +11,18 @@ Vagrant.configure("2") do |config|
     end
       
     config.vm.define "k8s-master" do |master|
+
+        master.vm.provider "virtualbox" do |v|
+            v.name = "k8s-master"
+        end
         
         master.vm.box = IMAGE_NAME
         master.vm.hostname = "k8s-master"
+
         # master.vm.synced_folder ".", "/vagrant", disabled: true
 
         master.vm.network "private_network", ip: "192.168.50.10"
-        master.vm.network "public_network"
+        # master.vm.network "public_network"
 		
 		master.vm.boot_timeout = 600
         
@@ -35,12 +40,16 @@ Vagrant.configure("2") do |config|
     (1..N).each do |i|
         config.vm.define "node-#{i}" do |node|
 
+            node.vm.provider "virtualbox" do |v|
+              v.name = "node-#{i}"
+            end
+
             node.vm.box = IMAGE_NAME
             node.vm.hostname = "node-#{i}"
             # node.vm.synced_folder ".", "/vagrant", disabled: true
 
             node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
-            node.vm.network "public_network"
+            # node.vm.network "public_network"
 			
 			node.vm.boot_timeout = 600
             
