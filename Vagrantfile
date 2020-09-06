@@ -1,12 +1,12 @@
 IMAGE_NAME = "bento/ubuntu-18.04"
-N = 6
+N = 2 
 
 Vagrant.configure("2") do |config|
     # config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
         v.memory = 4096
-        v.cpus = 4
+        v.cpus = 8 
         # v.disksize.size = '50GB'
     end
       
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
         master.vm.network "private_network", ip: "192.168.50.10"
         # master.vm.network "public_network"
 		
-		master.vm.boot_timeout = 600
+	master.vm.boot_timeout = 600
         
         master.vm.provision "ansible" do |ansible|
             ansible.playbook = "kubernetes-setup/master-playbook.yml"
@@ -48,17 +48,17 @@ Vagrant.configure("2") do |config|
             node.vm.hostname = "node-#{i}"
             # node.vm.synced_folder ".", "/vagrant", disabled: true
 
-            node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
+            node.vm.network "private_network", ip: "192.168.50.#{i + 130}"
             # node.vm.network "public_network"
 			
-			node.vm.boot_timeout = 600
+            node.vm.boot_timeout = 600
             
             node.vm.provision "ansible" do |ansible|
                 ansible.playbook = "kubernetes-setup/node-playbook.yml"
                 # ansible.install_mode = "pip"
                 # ansible.version = "2.9.12"
                 ansible.extra_vars = {
-                    node_ip: "192.168.50.#{i + 10}",
+                    node_ip: "192.168.50.#{i + 130}",
                 }
             end
         end
