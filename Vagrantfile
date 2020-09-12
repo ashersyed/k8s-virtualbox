@@ -1,5 +1,5 @@
 IMAGE_NAME = "bento/ubuntu-18.04"
-N = 1
+N = 6 
 
 require 'rbconfig'
 def is_windows
@@ -71,7 +71,7 @@ Vagrant.configure("2") do |config|
         master.vm.network "private_network", ip: "192.168.50.10"
         # master.vm.network "public_network"
 
-		master.vm.boot_timeout = 600
+        master.vm.boot_timeout = 600
 
         master.vm.provision provisioner do |ansible|
             ansible.playbook = "kubernetes-setup/master-playbook.yml"
@@ -81,6 +81,7 @@ Vagrant.configure("2") do |config|
                 node_ip: "192.168.50.10",
                 nfs_server_ip: "192.168.50.100"
             }
+            ansible.tags = ['nfs']
         end
 
     end
@@ -102,7 +103,7 @@ Vagrant.configure("2") do |config|
             node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
             # node.vm.network "public_network"
 
-			node.vm.boot_timeout = 600
+            node.vm.boot_timeout = 600
 
             node.vm.provision provisioner do |ansible|
                 ansible.playbook = "kubernetes-setup/node-playbook.yml"
@@ -112,6 +113,7 @@ Vagrant.configure("2") do |config|
                     node_ip: "192.168.50.#{i + 10}",
                     nfs_server_ip: "192.168.50.100"
                 }
+                ansible.tags = ['nfs']
             end
         end
     end

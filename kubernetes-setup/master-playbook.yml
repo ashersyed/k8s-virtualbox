@@ -150,6 +150,7 @@
       name: nfs-common
       state: present
       update_cache: yes
+    tags: "nfs"
 
   - name: Create mountable dir
     file: 
@@ -158,6 +159,7 @@
       mode: 777 
       owner: root 
       group: root
+    tags: "nfs"
 
   - name: mount the nfsshare in client side
     mount:
@@ -169,6 +171,7 @@
       src: "{{item.src}}"
       path: "{{item.path}}"
     with_items: "{{nfs_mounts}}"
+    tags: "nfs"
 
 # 2.7: Setup a handler for checking Docker daemon
 
