@@ -1,0 +1,17 @@
+- hosts: all
+  become: true
+  vars:
+    nfs_exports: [ "/mnt/shared *(rw,sync,no_subtree_check)" ]
+
+  roles:
+    - geerlingguy.nfs
+
+  tasks:
+
+    - name: Create mountable dir
+      file: 
+        path: /mnt/shared
+        state: directory 
+        mode: 777 
+        owner: root 
+        group: root

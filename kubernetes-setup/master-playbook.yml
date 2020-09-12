@@ -3,6 +3,10 @@
 ---
 - hosts: all
   become: true
+  vars:
+    nfs_mounts:
+      - {  path: "/mnt/shared", src: "{{ nfs_server_ip }}:/mnt/shared" }
+
   tasks:
   - name: Install packages that allow apt to be used over HTTPS
     apt:
@@ -138,6 +142,33 @@
   - name: Copy join command to local file
     local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
     become: false
+
+# 2.6.A add nfs client packages
+
+  - name: Ensure NFS common is installed.
+    apt: 
+      name: nfs-common
+      state: present
+      update_cache: yes
+
+  - name: Create mountable dir
+    file: 
+      path: /mnt/shared
+      state: directory 
+      mode: 777 
+      owner: root 
+      group: root
+
+  - name: mount the nfsshare in client side
+    mount:
+      fstype: nfs
+      opts: defaults
+      dump: "0"
+      passno: "0"
+      state: mounted
+      src: "{{item.src}}"
+      path: "{{item.path}}"
+    with_items: "{{nfs_mounts}}"
 
 # 2.7: Setup a handler for checking Docker daemon
 
